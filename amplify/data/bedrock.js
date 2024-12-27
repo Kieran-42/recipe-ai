@@ -5,7 +5,7 @@ export function request(ctx) {
 
   return {
     // Update the resource path to match your predefined flow endpoint
-    resourcePath: `/v1/flows/FOB0K1V68X/invoke`,  // Modify with your actual flow endpoint
+    resourcePath: "/v1/flows/FOB0K1V68X/invoke",  // Replace with your actual flow endpoint
     method: "POST",
     params: {
       headers: {
@@ -30,6 +30,8 @@ export function request(ctx) {
 
 export function response(ctx) {
   const result = JSON.parse(ctx.result.body);
+  console.log("Flow response:", result); // Log the flow response for debugging
+
   if (result.flowCompletionEvent?.completionReason === 'SUCCESS') {
     return {
       body: result.flowOutputEvent?.content?.document ?? 'Flow invocation succeeded but no document returned.',
