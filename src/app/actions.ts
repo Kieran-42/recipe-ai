@@ -1,8 +1,8 @@
 import { amplifyClient } from "./amplify-utils";
 
-export async function generateRecipe(formData: FormData) {
+export async function generateRecipe({ userInput }: { userInput: string }) {
   const response = await amplifyClient.queries.askBedrock({
-    ingredients: [formData.get("ingredients")?.toString() || ""],
+    userInput: userInput,  // Updated to send userInput directly
   });
 
   const res = JSON.parse(response.data?.body!);

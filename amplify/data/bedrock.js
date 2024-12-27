@@ -1,29 +1,26 @@
 export function request(ctx) {
-  const { ingredients = [] } = ctx.args;
+  const { userInput = "" } = ctx.args;
 
-  const prompt = `Suggest a recipe idea using these ingredients : ${ingredients.join(
-    ","
-  )}.`;
+  const document = `User input: ${userInput}`;
 
   return {
-    resourcePath: `/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke`,
+    // Update the resource path to match your predefined flow endpoint
+    resourcePath: `/v1/flows/FOB0K1V68X/invoke`,  // Modify with your actual flow endpoint
     method: "POST",
     params: {
       headers: {
         "Content-Type": "application/json",
       },
       body: {
-        anthropic_version: "bedrock-2023-05-31",
-        max_tokens: 1000,
-        messages: [
+        flowIdentifier: "FOB0K1V68X",  // Replace with your flow identifier
+        flowAliasIdentifier: "GN7Q1PBLU6",  // Replace with your flow alias identifier
+        inputs: [
           {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: `\n\nHuman:${prompt}\n\nAssistant:`,
-              },
-            ],
+            content: {
+              document: document
+            },
+            nodeName: 'FlowInputNode',
+            nodeOutputName: 'document'
           },
         ],
       },
@@ -32,7 +29,14 @@ export function request(ctx) {
 }
 
 export function response(ctx) {
-  return {
-    body: ctx.result.body,
-  };
+  const result = JSON.parse(ctx.result.body);
+  if (result.flowCompletionEvent?.completionReason === 'SUCCESS') {
+    return {
+      body: result.flowOutputEvent?.content?.document ?? 'Flow invocation succeeded but no document returned.',
+    };
+  } else {
+    return {
+      body: `The flow invocation completed due to the following reason: ${result.flowCompletionEvent?.completionReason}`,
+    };
+  }
 }
