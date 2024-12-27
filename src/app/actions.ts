@@ -5,7 +5,14 @@ export async function generateRecipe({ userInput }: { userInput: string }) {
     userInput: userInput,  // Updated to send userInput directly
   });
 
-  const res = JSON.parse(response.data?.body!);
-  const content = res.content[0].text;
-  return content || "";
+  let content = "";
+
+  try {
+    const res = JSON.parse(response.data?.body!);
+    content = res.content[0].text;
+  } catch (e) {
+    content = response.data?.body || "Error: Received an invalid response format";
+  }
+
+  return content;
 }
