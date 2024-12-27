@@ -33,12 +33,14 @@ export function response(ctx) {
   console.log("Flow response:", result); // Log the flow response for debugging
 
   if (result.flowCompletionEvent?.completionReason === 'SUCCESS') {
+    // Return everything in the flowOutputEvent array
     return {
-      body: result.flowOutputEvent?.content?.document ?? 'Flow invocation succeeded but no document returned.',
+      body: JSON.stringify(result.flowOutputEvent),
     };
   } else {
+    // Output everything received if the flow is not completed
     return {
-      body: `The flow invocation completed due to the following reason: ${result.flowCompletionEvent?.completionReason}`,
+      body: JSON.stringify(result),
     };
   }
 }

@@ -24,7 +24,7 @@ const bedrockDataSource = backend.data.resources.graphqlApi.addHttpDataSource(
 bedrockDataSource.grantPrincipal.addToPrincipalPolicy(
   new PolicyStatement({
     resources: [
-      "arn:aws:bedrock:us-east-1::predefined-flow/flow-id/alias-id",
+      "arn:aws:bedrock:us-east-1:796973475993:flow/FOB0K1V68X",
     ],
     actions: ["bedrock:InvokeFlow"],  // Ensure this action is correct for invoking the flow
   })
